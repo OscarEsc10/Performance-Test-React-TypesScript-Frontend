@@ -26,6 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/user-interface.png" type="image/png" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 text-black`}>
         <AuthProvider>
           <Header />
