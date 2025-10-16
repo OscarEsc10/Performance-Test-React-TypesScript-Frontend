@@ -1,26 +1,39 @@
-"use client";
-
-import { useEffect } from "react";
 import axios from "axios";
-import { api } from "../../config/config";
 
-export default function ProductsPage() {
-  useEffect(() => {
-    console.log("🧩 useEffect triggered");
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+});
 
-    const apiUrl =api;
-    console.log("🔗 API URL:", apiUrl);
-
-    axios
-      .get(`${apiUrl}/products`)
-      .then((res) => {
-        console.log("✅ Products fetched successfully:");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.error("❌ Error fetching products:", err.message);
-      });
-  }, []);
-
-  return null;
+// Helper to read token from cookie on client
+function getTokenFromCookie() {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(/(?:^|; )token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
 }
+
+// Attach Authorization header if token exists (cookie or localStorage)
+api.interceptors.request.use((config) => {
+  const ls = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const cookieToken = typeof window !== 'undefined' ? getTokenFromCookie() : null;
+  const token = ls || cookieToken;
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Normalize backend errors and surface meaningful messages
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    const message = error?.response?.data?.message || error.message || 'Unexpected error';
+    if (status === 404) throw new Error('Resource not found');
+    if (status === 403) throw new Error('Forbidden: insufficient permissions');
+    if (status === 401) throw new Error('Unauthorized: please login');
+    throw new Error(message);
+  }
+);
+
+export default api;
