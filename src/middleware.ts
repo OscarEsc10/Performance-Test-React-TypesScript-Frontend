@@ -7,12 +7,12 @@ export async function middleware(request: NextRequest) {
   const publicPaths = ["/dashboard/login"];
   const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
-  // Si no hay token y no es ruta pública, redirigir a login
+  // If there is no token and it is not a public route, redirect a login
   if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL("/dashboard/login", request.url));
   }
 
-  // Si hay token y es ruta pública, redirigir a dashboard
+  // If there is a token and it is a public route, redirect to the dashboard
   if (token && isPublicPath) {
     return NextResponse.redirect(new URL("/dashboard/products", request.url));
   }
