@@ -9,6 +9,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const onProducts = pathname?.startsWith("/dashboard/products");
+  const isAdmin = user?.role === "admin";
 
   const handleLogout = () => {
     logout();
@@ -19,6 +20,10 @@ export default function Header() {
     router.push("/dashboard/products?new=1");
   };
 
+  const openCreateUser = () => {
+    router.push("/dashboard/users?new=1");
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-gray-500 backdrop-blur border-b">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -26,6 +31,14 @@ export default function Header() {
           Technova
         </Link>
         <div className="flex items-center gap-3">
+          {isAdmin && (
+            <button
+              onClick={openCreateUser}
+              className="px-3 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+            >
+              Create User
+            </button>
+          )}
           {user && (
             <button
               onClick={handleLogout}
