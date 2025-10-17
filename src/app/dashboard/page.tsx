@@ -34,7 +34,6 @@ export default function DashboardHome() {
       <div className="bg-white border rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-800 mb-2">Quick tips</h3>
         <ul className="list-disc pl-5 text-gray-600 space-y-1">
-          <li>Non-admins can add and update products, but cannot delete them.</li>
           <li>Admins can also manage users.</li>
           <li>Use the Products section to access full CRUD and filters.</li>
         </ul>
