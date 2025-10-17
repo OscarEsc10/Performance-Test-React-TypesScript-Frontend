@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function DashboardHome() {
   const { user } = useAuth();
+  console.log(user?.role === "admin");
   const isAdmin = user?.role === "admin";
 
   return (
